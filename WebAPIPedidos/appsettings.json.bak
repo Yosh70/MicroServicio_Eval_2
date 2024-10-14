@@ -1,0 +1,12 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "AUTOCOMDB": "Server=DESKTOP-R414F9R\\YOSHSERVER;Database=AUTOCOM;User Id=sa;Password=Sistemas2020;TrustServerCertificate=true;"
+  }
+}
