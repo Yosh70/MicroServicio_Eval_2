@@ -59,5 +59,18 @@ public static class PedidoEndpoints
             .WithSummary("Get Productos by Pedido Id")
             .Produces<ResponsePedidoProductoDto>(statusCode: 200, contentType: "application/json");
 
+
+        pedido.MapPost("/{id}/productos", async ([FromRoute] int id,
+                                        [FromBody] UpdatePedidoHeadDto createPedidoDto,
+                                        IPedidoService service)
+                                => await service.UpdateDetail(id, createPedidoDto)
+                                            is UpdatePedidoHeadDto pedido
+                                            ? Results.Ok(pedido)
+                                            : Results.BadRequest("Error updating pedido detail"))
+            .WithSummary("Update Pedido detail by Id")
+            .Produces<UpdatePedidoHeadDto>(statusCode: 200, contentType: "application/json")
+            .AddEndpointFilter<ValidationFilter<UpdatePedidoHeadDto>>()
+            .WithRequestValidation<UpdatePedidoHeadDto>();
+
     }
 }

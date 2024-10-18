@@ -9,5 +9,6 @@ public interface IPedidoRepository
     Task<bool> Delete(int id);
 
     Task<List<PedidoProducto>> GetDetail(int id);
+    Task<Pedido> UpdateDetail(PedidoAgregate pedido);
 
 }

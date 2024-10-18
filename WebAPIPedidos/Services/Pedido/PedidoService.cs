@@ -123,4 +123,35 @@ public class PedidoService : IPedidoService
 
         return pedidoDetail;
     }
+
+    public async Task<UpdatePedidoHeadDto> UpdateDetail(int id, UpdatePedidoHeadDto pedido)
+    {
+        if (id != pedido.Id) return null;
+
+        PedidoAgregate pedidoAgregate = PedidoAgregate.FromUpdate(pedido);
+
+        var updatePedido = await _pedidoRepository.UpdateDetail(pedidoAgregate);
+
+        if (updatePedido is null) return null;
+
+        UpdatePedidoHeadDto updatePedidoHeadDto = new()
+        {
+            Id = updatePedido.Id,
+            Fecha = updatePedido.Fecha,
+            ClienteId = updatePedido.ClienteId
+        };
+
+        foreach (var item in updatePedido.PedidoProductos)
+        {
+            updatePedidoHeadDto.PedidoProducto.Add(new UpdatePedidoDetailDto
+            {
+                PedidoId = item.PedidoId,
+                ProductoId = item.ProductoId,
+                Cantidad = item.Cantidad
+            });
+        }
+
+        return updatePedidoHeadDto;
+
+    }
 }

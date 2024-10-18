@@ -3,14 +3,19 @@
 public class ProductoService : IProductoService
 {
     private readonly IProductoRepository _productoRepository;
+    private readonly ILogger<ProductoService> _logger;
 
-    public ProductoService(IProductoRepository productoRepository)
+    public ProductoService(IProductoRepository productoRepository,
+                           ILogger<ProductoService> logger)
     {
         _productoRepository = productoRepository;
+        _logger = logger;
     }
 
     public async Task<int> Create(CreateProductoDto productoDto)
     {
+        _logger.LogInformation($"Application: Request: {JsonSerializer.Serialize(productoDto)}\n");
+
         Producto producto = new()
         {
             Nombre = productoDto.Nombre,

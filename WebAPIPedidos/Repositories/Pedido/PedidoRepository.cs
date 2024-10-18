@@ -67,9 +67,36 @@ public class PedidoRepository : IPedidoRepository
         await _tiendaPedidoContext.PedidoProducto.Include(x => x.Producto).ToListAsync();
 
 
+    public async Task<Pedido> UpdateDetail(PedidoAgregate pedido)
+    {
+        var existPedido = await _tiendaPedidoContext.Pedido
+                                 .Include(x => x.PedidoProductos)
+                                 .FirstOrDefaultAsync(x => x.Id == pedido.Id);
+
+        if (existPedido is null) return null;
+
+        if (existPedido.PedidoProductos.Any())
+        {
+            _tiendaPedidoContext.RemoveRange(existPedido.PedidoProductos);
+            await SaveChanges();
+
+            foreach (var item in pedido.updatePedidoDetails)
+            {
+                await _tiendaPedidoContext.AddAsync(new PedidoProducto
+                {
+                    Pedido = existPedido,
+                    ProductoId = item.ProductoId,
+                    Cantidad = item.Cantidad
+                });
+            }
+            await SaveChanges();
+        }
+
+        return existPedido;
+    }
+
 
     public async Task SaveChanges() =>
         await _tiendaPedidoContext.SaveChangesAsync();
-
 
 }
